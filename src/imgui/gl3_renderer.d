@@ -23,8 +23,15 @@ import core.stdc.string;
 import std.math;
 import std.stdio;
 
-import glad.gl.all;
-import glad.gl.loader;
+version(imgui_gl_glad)
+{
+    import glad.gl.all;
+    import glad.gl.loader;
+}
+version(imgui_gl_derelict)
+{
+    import derelict.opengl3.gl3;
+}
 
 import imgui.api;
 import imgui.engine;
