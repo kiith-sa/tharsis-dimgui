@@ -504,6 +504,8 @@ bool imguiRenderGLInit(const(char)[] fontpath, const uint fontTextureSize)
     glBindAttribLocation(g_program, 2, "VertexColor");
     glBindFragDataLocation(g_program, 0, "Color");
     glLinkProgram(g_program);
+    glDetachShader(g_program, vso);
+    glDetachShader(g_program, fso);
     glDeleteShader(vso);
     glDeleteShader(fso);
 
@@ -525,6 +527,11 @@ void imguiRenderGLDestroy()
     {
         glDeleteTextures(1, &g_ftex);
         g_ftex = 0;
+    }
+    if (g_whitetex)
+    {
+        glDeleteTextures(1, &g_whitetex);
+        g_whitetex = 0;
     }
 
     if (g_vao)
@@ -760,4 +767,5 @@ void imguiRenderGLDraw(int width, int height)
     }
 
     glDisable(GL_SCISSOR_TEST);
+    glUseProgram(0);
 }
