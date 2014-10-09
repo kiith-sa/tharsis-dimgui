@@ -8,6 +8,19 @@ Homepage of the original dimgui: https://github.com/d-gamedev-team/dimgui
 
 **dimgui** is an [immediate-mode] GUI library.
 
+## Main differences from *dimgui*
+
+* Simple text input widget
+* Minor bugfixes
+* Added an optional build configuration to enable dimgui to work with Derelict
+  by adding this to *dub.json* of a dimgui-based project:
+
+  ```
+  "subConfigurations": {
+      "tharsis-dimgui": "derelict-gl-library",
+  },
+  ```
+
 
 ## Examples
 
