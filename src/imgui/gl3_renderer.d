@@ -54,7 +54,7 @@ enum FIRST_CHARACTER     = 32;
 
 /** Globals start. */
 
-// A 1024x1024 font texture takes 1MiB of memory, and should be enough for thousands of 
+// A 1024x1024 font texture takes 1MiB of memory, and should be enough for thousands of
 // glyphs (at the fixed 15.0f size imgui uses).
 //
 // Some examples:
@@ -67,7 +67,7 @@ enum FIRST_CHARACTER     = 32;
 // DroidSans (the small version included for examples) 512x512      903 (all glyphs in the font)
 // DroidSans (the small version included for examples) 256x256      497
 // =================================================== ============ =============================
-// 
+//
 // This was measured after the optimization to reuse null character glyph, which is in
 // BakeFontBitmap in stdb_truetype.d
 __gshared uint g_font_texture_size = 1024;
@@ -415,10 +415,10 @@ bool imguiRenderGLInit(const(char)[] fontpath, const uint fontTextureSize)
         return false;
     }
 
-    const result = stbtt_BakeFontBitmap(ttfBuffer, 0, 15.0f, bmap, 
+    const result = stbtt_BakeFontBitmap(ttfBuffer, 0, 15.0f, bmap,
                                         g_font_texture_size, g_font_texture_size,
                                         FIRST_CHARACTER, g_max_character_count, g_cdata.ptr);
-    // If result is negative, we baked less than max characters so update the max 
+    // If result is negative, we baked less than max characters so update the max
     // character count.
     if(result < 0)
     {
@@ -428,7 +428,7 @@ bool imguiRenderGLInit(const(char)[] fontpath, const uint fontTextureSize)
     // can free ttf_buffer at this point
     glGenTextures(1, &g_ftex);
     glBindTexture(GL_TEXTURE_2D, g_ftex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
                  g_font_texture_size, g_font_texture_size,
                  0, GL_RED, GL_UNSIGNED_BYTE, bmap);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -547,6 +547,7 @@ void imguiRenderGLDestroy()
         g_program = 0;
     }
 }
+
 
 void getBakedQuad(stbtt_bakedchar* chardata, int pw, int ph, int char_index,
                          float* xpos, float* ypos, stbtt_aligned_quad* q)
