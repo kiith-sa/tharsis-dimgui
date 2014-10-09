@@ -1,12 +1,13 @@
-# dimgui
+# tharsis-dimgui
 
 ![dimgui](https://raw.github.com/d-gamedev-team/dimgui/master/screenshot/imgui.png)
 
-This is a D port of the [imgui] OpenGL GUI library.
+This is a (temporary?) fork of **dimgui**, the D port of the [imgui] OpenGL GUI library.
+
+Homepage of the original dimgui: https://github.com/d-gamedev-team/dimgui
 
 **dimgui** is an [immediate-mode] GUI library.
 
-Homepage: https://github.com/d-gamedev-team/dimgui
 
 ## Examples
 

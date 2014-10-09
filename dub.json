@@ -1,7 +1,7 @@
 {
-    "name": "dimgui",
+    "name": "tharsis-dimgui",
 
-    "description": "dimgui is a D port of the imgui OpenGL GUI library",
+    "description": "A fork of dimgui used in Tharsis and related projects",
 
     "authors": [
         "Mikko Mononen",
@@ -9,7 +9,7 @@
         "Andrej Mitrovic"
     ],
 
-    "homepage": "https://github.com/d-gamedev-team/dimgui",
+    "homepage": "https://github.com/kiith-sa/tharsis-dimgui",
 
     "copyright": "Copyright (c) 2009-2010 Mikko Mononen memon@inside.org",
 
