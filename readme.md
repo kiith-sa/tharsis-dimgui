@@ -1,6 +1,6 @@
 # tharsis-dimgui
 
-![shield](https://raw.githubusercontent.com/kiith-sa/tharsis-dimgui/master/code.dlang.org-shield.png)
+[![shield](https://raw.githubusercontent.com/kiith-sa/tharsis-dimgui/master/code.dlang.org-shield.png)](http://code.dlang.org)
 
 ![dimgui](https://raw.github.com/d-gamedev-team/dimgui/master/screenshot/imgui.png)
 
