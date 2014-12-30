@@ -1,5 +1,7 @@
 # tharsis-dimgui
 
+![shield](https://raw.githubusercontent.com/kiith-sa/tharsis-dimgui/master/code.dlang.org-shield.png)
+
 ![dimgui](https://raw.github.com/d-gamedev-team/dimgui/master/screenshot/imgui.png)
 
 This is a (temporary?) fork of **dimgui**, the D port of the [imgui] OpenGL GUI library.
