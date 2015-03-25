@@ -71,12 +71,12 @@ enum FIRST_CHARACTER     = 32;
 // This was measured after the optimization to reuse null character glyph, which is in
 // BakeFontBitmap in stdb_truetype.d
 __gshared uint g_font_texture_size = 1024;
-__gshared float g_tempCoords[TEMP_COORD_COUNT * 2];
-__gshared float g_tempNormals[TEMP_COORD_COUNT * 2];
-__gshared float g_tempVertices[TEMP_COORD_COUNT * 12 + (TEMP_COORD_COUNT - 2) * 6];
-__gshared float g_tempTextureCoords[TEMP_COORD_COUNT * 12 + (TEMP_COORD_COUNT - 2) * 6];
-__gshared float g_tempColors[TEMP_COORD_COUNT * 24 + (TEMP_COORD_COUNT - 2) * 12];
-__gshared float g_circleVerts[CIRCLE_VERTS * 2];
+__gshared float[TEMP_COORD_COUNT * 2] g_tempCoords;
+__gshared float[TEMP_COORD_COUNT * 2] g_tempNormals;
+__gshared float[TEMP_COORD_COUNT * 12 + (TEMP_COORD_COUNT - 2) * 6] g_tempVertices;
+__gshared float[TEMP_COORD_COUNT * 12 + (TEMP_COORD_COUNT - 2) * 6] g_tempTextureCoords;
+__gshared float[TEMP_COORD_COUNT * 24 + (TEMP_COORD_COUNT - 2) * 12] g_tempColors;
+__gshared float[CIRCLE_VERTS * 2] g_circleVerts;
 __gshared uint g_max_character_count = MAX_CHARACTER_COUNT;
 __gshared stbtt_bakedchar[MAX_CHARACTER_COUNT] g_cdata;
 __gshared GLuint g_ftex     = 0;
@@ -284,7 +284,7 @@ void drawPolygon(const(float)* coords, uint numCoords, float r, uint col)
 
 void drawRect(float x, float y, float w, float h, float fth, uint col)
 {
-    const float verts[4 * 2] =
+	const float[4 * 2] verts =
     [
         x + 0.5f, y + 0.5f,
         x + w - 0.5f, y + 0.5f,
@@ -314,7 +314,7 @@ void drawRect(float x, float y, float w, float h, float fth, uint col)
 void drawRoundedRect(float x, float y, float w, float h, float r, float fth, uint col)
 {
     const uint n = CIRCLE_VERTS / 4;
-    float verts[(n + 1) * 4 * 2];
+	float[(n + 1) * 4 * 2] verts;
     const(float)* cverts = g_circleVerts.ptr;
     float* v = verts.ptr;
 
@@ -362,7 +362,7 @@ void drawLine(float x0, float y0, float x1, float y1, float r, float fth, uint c
     }
     float nx = dy;
     float ny = -dx;
-    float verts[4 * 2];
+	float[4 * 2] verts;
     r -= fth;
     r *= 0.5f;
 
@@ -660,7 +660,7 @@ void drawText(float x, float y, const(char)[] text, int align_, uint col)
             getBakedQuad(g_cdata.ptr, g_font_texture_size, g_font_texture_size,
                          c - FIRST_CHARACTER, &x, &y, &q);
 
-            float v[12] = [
+			float[12] v = [
                 q.x0, q.y0,
                 q.x1, q.y1,
                 q.x1, q.y0,
@@ -668,7 +668,7 @@ void drawText(float x, float y, const(char)[] text, int align_, uint col)
                 q.x0, q.y1,
                 q.x1, q.y1,
             ];
-            float uv[12] = [
+			float[12] uv = [
                 q.s0, q.t0,
                 q.s1, q.t1,
                 q.s1, q.t0,
@@ -676,7 +676,7 @@ void drawText(float x, float y, const(char)[] text, int align_, uint col)
                 q.s0, q.t1,
                 q.s1, q.t1,
             ];
-            float cArr[24] = [
+			float[24] cArr = [
                 r, g, b, a,
                 r, g, b, a,
                 r, g, b, a,
@@ -741,7 +741,7 @@ void imguiRenderGLDraw(int width, int height)
         {
             if (cmd.flags == 1)
             {
-                const float verts[3 * 2] =
+				const float[3 * 2] verts =
                 [
                     cast(float)cmd.rect.x * s + 0.5f, cast(float)cmd.rect.y * s + 0.5f,
                     cast(float)cmd.rect.x * s + 0.5f + cast(float)cmd.rect.w * s - 1, cast(float)cmd.rect.y * s + 0.5f + cast(float)cmd.rect.h * s / 2 - 0.5f,
@@ -752,7 +752,7 @@ void imguiRenderGLDraw(int width, int height)
 
             if (cmd.flags == 2)
             {
-                const float verts[3 * 2] =
+				const float[3 * 2] verts =
                 [
                     cast(float)cmd.rect.x * s + 0.5f, cast(float)cmd.rect.y * s + 0.5f + cast(float)cmd.rect.h * s - 1,
                     cast(float)cmd.rect.x * s + 0.5f + cast(float)cmd.rect.w * s / 2 - 0.5f, cast(float)cmd.rect.y * s + 0.5f,
