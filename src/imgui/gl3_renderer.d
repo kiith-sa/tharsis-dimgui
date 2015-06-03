@@ -272,7 +272,7 @@ void drawPolygon(const(float)* coords, uint numCoords, float r, uint col)
 
 void drawRect(float x, float y, float w, float h, float fth, uint col)
 {
-	const float[4 * 2] verts =
+    const float[4 * 2] verts =
     [
         x + 0.5f, y + 0.5f,
         x + w - 0.5f, y + 0.5f,
@@ -302,7 +302,7 @@ void drawRect(float x, float y, float w, float h, float fth, uint col)
 void drawRoundedRect(float x, float y, float w, float h, float r, float fth, uint col)
 {
     const uint n = CIRCLE_VERTS / 4;
-	float[(n + 1) * 4 * 2] verts;
+    float[(n + 1) * 4 * 2] verts;
     const(float)* cverts = g_circleVerts.ptr;
     float* v = verts.ptr;
 
@@ -350,7 +350,7 @@ void drawLine(float x0, float y0, float x1, float y1, float r, float fth, uint c
     }
     float nx = dy;
     float ny = -dx;
-	float[4 * 2] verts;
+    float[4 * 2] verts;
     r -= fth;
     r *= 0.5f;
 
@@ -648,7 +648,7 @@ void drawText(float x, float y, const(char)[] text, int align_, uint col)
             getBakedQuad(g_cdata.ptr, g_font_texture_size, g_font_texture_size,
                          c - FIRST_CHARACTER, &x, &y, &q);
 
-			float[12] v = [
+            float[12] v = [
                 q.x0, q.y0,
                 q.x1, q.y1,
                 q.x1, q.y0,
@@ -656,7 +656,7 @@ void drawText(float x, float y, const(char)[] text, int align_, uint col)
                 q.x0, q.y1,
                 q.x1, q.y1,
             ];
-			float[12] uv = [
+            float[12] uv = [
                 q.s0, q.t0,
                 q.s1, q.t1,
                 q.s1, q.t0,
@@ -664,7 +664,7 @@ void drawText(float x, float y, const(char)[] text, int align_, uint col)
                 q.s0, q.t1,
                 q.s1, q.t1,
             ];
-			float[24] cArr = [
+            float[24] cArr = [
                 r, g, b, a,
                 r, g, b, a,
                 r, g, b, a,
@@ -729,7 +729,7 @@ void imguiRenderGLDraw(int width, int height)
         {
             if (cmd.flags == 1)
             {
-				const float[3 * 2] verts =
+                const float[3 * 2] verts =
                 [
                     cast(float)cmd.rect.x * s + 0.5f, cast(float)cmd.rect.y * s + 0.5f,
                     cast(float)cmd.rect.x * s + 0.5f + cast(float)cmd.rect.w * s - 1, cast(float)cmd.rect.y * s + 0.5f + cast(float)cmd.rect.h * s / 2 - 0.5f,
@@ -740,7 +740,7 @@ void imguiRenderGLDraw(int width, int height)
 
             if (cmd.flags == 2)
             {
-				const float[3 * 2] verts =
+                const float[3 * 2] verts =
                 [
                     cast(float)cmd.rect.x * s + 0.5f, cast(float)cmd.rect.y * s + 0.5f + cast(float)cmd.rect.h * s - 1,
                     cast(float)cmd.rect.x * s + 0.5f + cast(float)cmd.rect.w * s / 2 - 0.5f, cast(float)cmd.rect.y * s + 0.5f,
