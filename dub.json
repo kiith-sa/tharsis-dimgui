@@ -27,23 +27,16 @@
 
     "subPackages": [
         "examples/demo",
-        "examples/memory",
+        "examples/memory"
     ],
 
     "configurations": [
         {
             "name": "library",
-            "versions": ["imgui_gl_glad"],
-            "dependencies": {
-                "glad-drey": ">=0.0.2",
-            },
-        },
-        {
-            "name": "derelict-gl-library",
             "versions": ["imgui_gl_derelict"],
             "dependencies": {
-                "derelict-gl3":  ">=1.0.4",
-            },
-        },
-    ],
+                "derelict-gl3":  ">=1.0.13"
+            }
+        }
+    ]
 }
