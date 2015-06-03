@@ -95,9 +95,19 @@ immutable float[4] g_tabStops = [150, 210, 270, 330];
 
 package:
 
-uint maxCharacterCount() @trusted nothrow @nogc
+static if (__VERSION__ < 2066)
 {
-    return g_max_character_count;
+    @trusted nothrow uint maxCharacterCount()
+    {
+        return g_max_character_count;
+    }
+}
+else
+{
+    @nogc @trusted nothrow uint maxCharacterCount()
+    {
+        return g_max_character_count;
+    }
 }
 
 void imguifree(void* ptr, void* /*userptr*/)
