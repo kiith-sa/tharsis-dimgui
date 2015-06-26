@@ -761,7 +761,11 @@ void imguiRenderGLDraw(int width, int height)
         }
         else if (cmd.type == IMGUI_GFXCMD_TEXT)
         {
-            drawText(cmd.text.x, cmd.text.y, cmd.text.text, cmd.text.align_, cmd.col);
+            if ((cmd.text.y >= g_state.yorigin) && (cmd.text.y < (g_state.height+g_state.yorigin)) && 
+                (cmd.text.x >= g_state.xorigin) && (cmd.text.x < (g_state.width+g_state.xorigin)))
+            {
+                drawText(cmd.text.x, cmd.text.y, cmd.text.text, cmd.text.align_, cmd.col);
+            }
         }
         else if (cmd.type == IMGUI_GFXCMD_SCISSOR)
         {

@@ -225,6 +225,9 @@ struct GuiState
 
     uint areaId;
     uint widgetId;
+
+    // size of current renderable area
+    int xorigin, yorigin, width, height;
 }
 
 bool anyActive()
