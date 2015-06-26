@@ -448,6 +448,10 @@ bool imguiBeginScrollArea(const(char)[] title, int xPos, int yPos, int width, in
     g_scrollBottom  = yPos + SCROLL_AREA_PADDING;
     g_scrollRight   = xPos + width - SCROLL_AREA_PADDING * 3;
     g_scrollVal     = scroll;
+    g_state.xorigin = xPos;
+    g_state.yorigin = yPos;
+    g_state.width   = width;
+    g_state.height  = height;
 
     g_scrollAreaTop = g_state.widgetY;
 
