@@ -438,6 +438,14 @@ void imguiRender(int width, int height)
 bool imguiBeginScrollArea(const(char)[] title, int xPos, int yPos, int width, int height, int* scroll, const ref ColorScheme colorScheme = defaultColorScheme)
 {
     g_state.areaId++;
+    with(g_state.scrollArea[g_state.areaId].clipRect)
+    {
+        x = cast(short) xPos;
+        y = cast(short) yPos;
+        w = cast(short) width;
+        h = cast(short) height;
+        r = 0;
+    }
     g_state.widgetId = 0;
     g_scrollId       = (g_state.areaId << 16) | g_state.widgetId;
 
