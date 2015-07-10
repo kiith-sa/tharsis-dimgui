@@ -53,6 +53,7 @@ enum TEXT_HEIGHT         = 8;
 enum SCROLL_AREA_PADDING = 6;
 enum INDENT_SIZE         = 16;
 enum AREA_HEADER         = 28;
+enum MAX_SCROLL_AREA     = 512;
 
 // Pull render interface.
 alias imguiGfxCmdType = int;
@@ -87,6 +88,7 @@ struct imguiGfxCmd
     char flags;
     byte[2] pad;
     uint col;
+    uint areaId;
 
     union
     {
@@ -94,6 +96,11 @@ struct imguiGfxCmd
         imguiGfxRect rect;
         imguiGfxText text;
     }
+}
+
+struct ScrollArea
+{
+    imguiGfxRect clipRect;
 }
 
 void resetGfxCmdQueue()
@@ -107,6 +114,7 @@ public void addGfxCmdScissor(int x, int y, int w, int h)
         return;
     auto cmd = &g_gfxCmdQueue[g_gfxCmdQueueSize++];
     cmd.type   = IMGUI_GFXCMD_SCISSOR;
+    cmd.areaId = g_state.areaId;
     cmd.flags  = x < 0 ? 0 : 1;         // on/off flag.
     cmd.col    = 0;
     cmd.rect.x = cast(short)x;
@@ -121,6 +129,7 @@ public void addGfxCmdRect(float x, float y, float w, float h, RGBA color)
         return;
     auto cmd = &g_gfxCmdQueue[g_gfxCmdQueueSize++];
     cmd.type   = IMGUI_GFXCMD_RECT;
+    cmd.areaId = g_state.areaId;
     cmd.flags  = 0;
     cmd.col    = color.toPackedRGBA();
     cmd.rect.x = cast(short)(x * 8.0f);
@@ -136,6 +145,7 @@ public void addGfxCmdLine(float x0, float y0, float x1, float y1, float r, RGBA 
         return;
     auto cmd = &g_gfxCmdQueue[g_gfxCmdQueueSize++];
     cmd.type    = IMGUI_GFXCMD_LINE;
+    cmd.areaId  = g_state.areaId;
     cmd.flags   = 0;
     cmd.col     = color.toPackedRGBA();
     cmd.line.x0 = cast(short)(x0 * 8.0f);
@@ -151,6 +161,7 @@ public void addGfxCmdRoundedRect(float x, float y, float w, float h, float r, RG
         return;
     auto cmd = &g_gfxCmdQueue[g_gfxCmdQueueSize++];
     cmd.type   = IMGUI_GFXCMD_RECT;
+    cmd.areaId = g_state.areaId;
     cmd.flags  = 0;
     cmd.col    = color.toPackedRGBA();
     cmd.rect.x = cast(short)(x * 8.0f);
@@ -166,6 +177,7 @@ public void addGfxCmdTriangle(int x, int y, int w, int h, int flags, RGBA color)
         return;
     auto cmd = &g_gfxCmdQueue[g_gfxCmdQueueSize++];
     cmd.type   = IMGUI_GFXCMD_TRIANGLE;
+    cmd.areaId = g_state.areaId;
     cmd.flags  = cast(byte)flags;
     cmd.col    = color.toPackedRGBA();
     cmd.rect.x = cast(short)(x * 8.0f);
@@ -180,6 +192,7 @@ public void addGfxCmdText(int x, int y, int align_, const(char)[] text, RGBA col
         return;
     auto cmd = &g_gfxCmdQueue[g_gfxCmdQueueSize++];
     cmd.type       = IMGUI_GFXCMD_TEXT;
+    cmd.areaId     = g_state.areaId;
     cmd.flags      = 0;
     cmd.col        = color.toPackedRGBA();
     cmd.text.x     = cast(short)x;
@@ -225,6 +238,7 @@ struct GuiState
 
     uint areaId;
     uint widgetId;
+    ScrollArea[MAX_SCROLL_AREA] scrollArea;
 }
 
 bool anyActive()
