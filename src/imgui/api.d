@@ -397,6 +397,7 @@ void imguiBeginFrame(int cursorX, int cursorY, ubyte mouseButtons, int mouseScro
     g_state.widgetY = 0;
     g_state.widgetW = 0;
 
+    g_state.inScrollArea = false;
     g_state.areaId   = 1;
     g_state.widgetId = 1;
 
@@ -412,6 +413,15 @@ void imguiEndFrame()
 /** Render all of the batched commands for the current frame. */
 void imguiRender(int width, int height)
 {
+    with(g_state.scrollArea[0].clipRect)
+    {
+        x = cast(short) 0;
+        y = cast(short) 0;
+        w = cast(short) width;
+        h = cast(short) height;
+        r = 0;
+    }
+
     imguiRenderGLDraw(width, height);
 }
 
@@ -437,6 +447,7 @@ void imguiRender(int width, int height)
 */
 bool imguiBeginScrollArea(const(char)[] title, int xPos, int yPos, int width, int height, int* scroll, const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    g_state.inScrollArea = true;
     g_state.areaId++;
     with(g_state.scrollArea[g_state.areaId].clipRect)
     {
@@ -488,6 +499,7 @@ bool imguiBeginScrollArea(const(char)[] title, int xPos, int yPos, int width, in
 */
 void imguiEndScrollArea(const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    scope(exit) { g_state.inScrollArea = false; }
     // Disable scissoring.
     addGfxCmdScissor(-1, -1, -1, -1);
 
