@@ -317,6 +317,14 @@ enum Enabled : bool
     yes,
 }
 
+/// Checking if the current widget is in screen area and should be rendered.
+private bool isWidgetInScreen()
+{
+    const miny = g_state.scrollArea[g_state.areaId].clipRect.y;
+    const maxy = miny + g_state.scrollArea[g_state.areaId].clipRect.h;
+    return (g_state.widgetY >= miny && g_state.widgetY <= maxy);
+}
+
 /** Initialize the imgui library. 
 
     Params: 
@@ -531,6 +539,11 @@ void imguiEndScrollArea(const ref ColorScheme colorScheme = defaultColorScheme)
         int hy = y + cast(int)(barY * h);
         int hw = w;
         int hh = cast(int)(barHeight * h);
+        if(hh < hw) // set minimal height of handle
+        {
+            hh = hw;
+            hy -= hh/2;
+        }
 
         const int range = h - (hh - 1);
         bool over       = inRect(hx, hy, hw, hh);
@@ -610,6 +623,10 @@ void imguiEndScrollArea(const ref ColorScheme colorScheme = defaultColorScheme)
 */
 bool imguiButton(const(char)[] label, Enabled enabled = Enabled.yes, const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    scope(exit) g_state.widgetY -= BUTTON_HEIGHT + DEFAULT_SPACING;
+    if (!isWidgetInScreen())
+        return false;
+
     g_state.widgetId++;
     uint id = (g_state.areaId << 16) | g_state.widgetId;
 
@@ -617,7 +634,6 @@ bool imguiButton(const(char)[] label, Enabled enabled = Enabled.yes, const ref C
     int y = g_state.widgetY - BUTTON_HEIGHT;
     int w = g_state.widgetW;
     int h = BUTTON_HEIGHT;
-    g_state.widgetY -= BUTTON_HEIGHT + DEFAULT_SPACING;
 
     bool over = enabled && inRect(x, y, w, h);
     bool res  = buttonLogic(id, over);
@@ -664,6 +680,10 @@ bool imguiButton(const(char)[] label, Enabled enabled = Enabled.yes, const ref C
 */
 bool imguiCheck(const(char)[] label, bool* checkState, Enabled enabled = Enabled.yes, const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    scope(exit) g_state.widgetY -= BUTTON_HEIGHT + DEFAULT_SPACING;
+    if (!isWidgetInScreen())
+        return false;
+
     g_state.widgetId++;
     uint id = (g_state.areaId << 16) | g_state.widgetId;
 
@@ -671,7 +691,6 @@ bool imguiCheck(const(char)[] label, bool* checkState, Enabled enabled = Enabled
     int y = g_state.widgetY - BUTTON_HEIGHT;
     int w = g_state.widgetW;
     int h = BUTTON_HEIGHT;
-    g_state.widgetY -= BUTTON_HEIGHT + DEFAULT_SPACING;
 
     bool over = enabled && inRect(x, y, w, h);
     bool res  = buttonLogic(id, over);
@@ -718,6 +737,10 @@ bool imguiCheck(const(char)[] label, bool* checkState, Enabled enabled = Enabled
 */
 bool imguiItem(const(char)[] label, Enabled enabled = Enabled.yes, const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    scope(exit) g_state.widgetY -= BUTTON_HEIGHT + DEFAULT_SPACING;
+    if (!isWidgetInScreen())
+        return false;
+
     g_state.widgetId++;
     uint id = (g_state.areaId << 16) | g_state.widgetId;
 
@@ -725,7 +748,6 @@ bool imguiItem(const(char)[] label, Enabled enabled = Enabled.yes, const ref Col
     int y = g_state.widgetY - BUTTON_HEIGHT;
     int w = g_state.widgetW;
     int h = BUTTON_HEIGHT;
-    g_state.widgetY -= BUTTON_HEIGHT + DEFAULT_SPACING;
 
     bool over = enabled && inRect(x, y, w, h);
     bool res  = buttonLogic(id, over);
@@ -760,6 +782,10 @@ bool imguiItem(const(char)[] label, Enabled enabled = Enabled.yes, const ref Col
 */
 bool imguiCollapse(const(char)[] label, const(char)[] subtext, bool* checkState, Enabled enabled = Enabled.yes, const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    scope(exit) g_state.widgetY -= BUTTON_HEIGHT;
+    if (!isWidgetInScreen())
+        return false;
+
     g_state.widgetId++;
     uint id = (g_state.areaId << 16) | g_state.widgetId;
 
@@ -767,7 +793,6 @@ bool imguiCollapse(const(char)[] label, const(char)[] subtext, bool* checkState,
     int y = g_state.widgetY - BUTTON_HEIGHT;
     int w = g_state.widgetW;
     int h = BUTTON_HEIGHT;
-    g_state.widgetY -= BUTTON_HEIGHT;     // + DEFAULT_SPACING;
 
     const int cx = x + BUTTON_HEIGHT / 2 - CHECK_SIZE / 2;
     const int cy = y + BUTTON_HEIGHT / 2 - CHECK_SIZE / 2;
@@ -804,9 +829,12 @@ bool imguiCollapse(const(char)[] label, const(char)[] subtext, bool* checkState,
 */
 void imguiLabel(const(char)[] label, const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    scope(exit) g_state.widgetY -= BUTTON_HEIGHT;
+    if (!isWidgetInScreen())
+        return;
+
     int x = g_state.widgetX;
     int y = g_state.widgetY - BUTTON_HEIGHT;
-    g_state.widgetY -= BUTTON_HEIGHT;
     addGfxCmdText(x, y + BUTTON_HEIGHT / 2 - TEXT_HEIGHT / 2, TextAlign.left, label, colorScheme.label.text);
 }
 
@@ -821,10 +849,13 @@ void imguiLabel(const(char)[] label, const ref ColorScheme colorScheme = default
 */
 void imguiValue(const(char)[] label, const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    scope(exit) g_state.widgetY -= BUTTON_HEIGHT;
+    if (!isWidgetInScreen())
+      return;
+
     const int x = g_state.widgetX;
     const int y = g_state.widgetY - BUTTON_HEIGHT;
     const int w = g_state.widgetW;
-    g_state.widgetY -= BUTTON_HEIGHT;
 
     addGfxCmdText(x + w - BUTTON_HEIGHT / 2, y + BUTTON_HEIGHT / 2 - TEXT_HEIGHT / 2, TextAlign.right, label, colorScheme.value.text);
 }
@@ -850,6 +881,10 @@ void imguiValue(const(char)[] label, const ref ColorScheme colorScheme = default
 */
 bool imguiSlider(const(char)[] label, float* sliderState, float minValue, float maxValue, float stepValue, Enabled enabled = Enabled.yes, const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    scope(exit) g_state.widgetY -= SLIDER_HEIGHT + DEFAULT_SPACING;
+    if (!isWidgetInScreen())
+        return false;
+
     g_state.widgetId++;
     uint id = (g_state.areaId << 16) | g_state.widgetId;
 
@@ -857,7 +892,6 @@ bool imguiSlider(const(char)[] label, float* sliderState, float minValue, float 
     int y = g_state.widgetY - BUTTON_HEIGHT;
     int w = g_state.widgetW;
     int h = SLIDER_HEIGHT;
-    g_state.widgetY -= SLIDER_HEIGHT + DEFAULT_SPACING;
 
     addGfxCmdRoundedRect(cast(float)x, cast(float)y, cast(float)w, cast(float)h, 4.0f, colorScheme.slider.back);
 
@@ -1007,6 +1041,10 @@ bool imguiTextInput(const(char)[] label, char[] buffer, ref char[] usedSlice,
            "The usedSlice parameter on imguiTextInput must be a slice to the buffer " ~
            "parameter");
 
+    scope(exit) g_state.widgetY -= BUTTON_HEIGHT + DEFAULT_SPACING;
+    if (!isWidgetInScreen())
+        return false;
+
     // Label
     g_state.widgetId++;
     uint id = (g_state.areaId << 16) | g_state.widgetId;
@@ -1059,7 +1097,6 @@ bool imguiTextInput(const(char)[] label, char[] buffer, ref char[] usedSlice,
                   isInputable(id) ? colorScheme.textInput.text
                                   : colorScheme.textInput.textDisabled);
 
-    g_state.widgetY -= BUTTON_HEIGHT + DEFAULT_SPACING;
     return res;
 }
 
@@ -1091,11 +1128,14 @@ void imguiSeparator()
 */
 void imguiSeparatorLine(const ref ColorScheme colorScheme = defaultColorScheme)
 {
+    scope(exit) g_state.widgetY -= DEFAULT_SPACING * 4;
+    if (isWidgetInScreen())
+        return;
+
     int x = g_state.widgetX;
     int y = g_state.widgetY - DEFAULT_SPACING * 2;
     int w = g_state.widgetW;
     int h = 1;
-    g_state.widgetY -= DEFAULT_SPACING * 4;
 
     addGfxCmdRect(cast(float)x, cast(float)y, cast(float)w, cast(float)h, colorScheme.separator);
 }
